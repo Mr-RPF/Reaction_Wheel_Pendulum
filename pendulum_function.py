@@ -7,7 +7,7 @@ import numpy as np
 
 def draw_graph_background(surface, x, y, w, h, scale, label_text, color):
     # Background
-    pygame.draw.rect(surface, (40, 40, 40), (x, y, w, h))
+    pygame.draw.rect(surface, (25, 25, 25), (x, y, w, h))
     
     # Centerline
     pygame.draw.line(surface, (100, 100, 100), (x, y + h // 2), (x + w, y + h // 2), 1)
@@ -35,11 +35,17 @@ def draw_graph_line(surface, data, x, y, h, scale, color):
         y2 = y + h // 2 - int(data[i] * scale)
         pygame.draw.line(surface, color, (x + i - 1, y1), (x + i, y2))
 
+def draw_graph(surface,graph_layout,data,label_text,color_line,color_background=(100, 200, 255)):
+    scale=0.5*(graph_layout[3]/max(data))
+    draw_graph_background(surface,graph_layout[0],graph_layout[1],graph_layout[2],graph_layout[3],scale,label_text,color_line)
+    draw_graph_line(surface,data,graph_layout[0],graph_layout[1],graph_layout[3],scale,color_line)
+
+
 
 # Pendulum functions
 
-def Pendulum_ODE(omega,omega_dot,omega_ddot,g,l,dt):
-    omega_ddot=-g/(l*10e-3)*np.sin(omega)
+def Pendulum_ODE(omega,omega_dot,omega_ddot,g,l,d,dt):
+    omega_ddot=-g*np.sin(omega)/l - d*omega_dot
     omega_dot+=omega_ddot*dt
     omega+=omega_dot*dt
     return omega,omega_dot,omega_ddot
