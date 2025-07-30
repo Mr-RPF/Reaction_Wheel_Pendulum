@@ -8,10 +8,10 @@ from pendulum_function import *
 
 g= 9.81 #m/s^2
 l = 0.3 #m
-d_1 = 0.1
+d_1 = 0.5
 
 omega = np.deg2rad(90)
-omega_dot = 0
+omega_dot = 90
 omega_ddot =0
 
 t_tot = 0
