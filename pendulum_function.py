@@ -4,6 +4,8 @@ import numpy as np
 
 
 # Pygame functions
+integral = 0
+error_prev = 0
 
 def draw_graph_background(surface, x, y, w, h, scale, label_text, color):
     # Background
@@ -44,8 +46,46 @@ def draw_graph(surface,graph_layout,data,label_text,color_line,color_background=
 
 # Pendulum functions
 
-def Pendulum_ODE(omega,omega_dot,omega_ddot,g,l,d,dt):
+def Pendulum_ODE(omega,omega_dot,g,l,d,dt):
     omega_ddot=-g*np.sin(omega)/l - d*omega_dot
     omega_dot+=omega_ddot*dt
     omega+=omega_dot*dt
     return omega,omega_dot,omega_ddot
+
+
+def accelerate_motor(dir,power):
+    torque_mod = 1*power
+    if np.absolute(torque_mod)>=2:
+        torque_mod = 2
+
+    if dir == 1:
+        return torque_mod
+    elif dir == 0:
+        return -torque_mod
+    else:
+        return 0
+    
+def PID (set_peed,real_speed,kp,ki,kd,dt):
+    global integral, error_prev
+
+    error = set_peed-real_speed
+
+    #print(error)
+
+    proportional = kp*error
+    integral += ki*error*dt
+    derivative = kd*(error-error_prev)/dt
+
+    error_prev = error
+
+    response = proportional + integral + derivative
+
+    
+
+    return response
+
+
+
+        
+    
+    
